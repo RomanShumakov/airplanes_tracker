@@ -2,13 +2,17 @@ from abc import ABC, abstractmethod
 import requests
 import json
 
+
 class AbstractClass(ABC):
 
     @abstractmethod
     def get_data(self):
         pass
 
+
 class AirplanesCords(AbstractClass):
+    """Класс для получения данных о самолетах по прямоугольным координатам"""
+
     def __init__(self, opensky_url, params_nominatim):
         self.opensky_url = opensky_url
         self.params_nominatim = params_nominatim
@@ -16,14 +20,14 @@ class AirplanesCords(AbstractClass):
             'User-Agent': 'test-app/1.0',
         }
 
-
     def get_data(self):
-
         response = requests.get(url=self.opensky_url, params=self.params_nominatim, headers=self.headers_nominatim)
         return response.json()
 
 
 class CountyCords(AbstractClass):
+    """Класс для получения прямоугольных координат страны по ее названию"""
+
     def __init__(self, openstreetmap_url, country):
         self.openstreetmap_url = openstreetmap_url
         self.params_nominatim = {
@@ -35,33 +39,24 @@ class CountyCords(AbstractClass):
             'User-Agent': 'test-app/1.0',
         }
 
-    # def get_data(self):
-    #     response = requests.get(url=self.openstreetmap_url, params=self.params_nominatim, headers=self.headers_nominatim)
-    #     return response.json()
     def get_data(self):
-        response = requests.get(url=self.openstreetmap_url, params=self.params_nominatim, headers=self.headers_nominatim)
+        response = requests.get(url=self.openstreetmap_url, params=self.params_nominatim,
+                                headers=self.headers_nominatim)
         sqrt_cords_str = response.json()[0].get("boundingbox")
-        lamin = float(sqrt_cords_str[0])
-        lamax = float(sqrt_cords_str[1])
-        lomin = float(sqrt_cords_str[2])
-        lomax = float(sqrt_cords_str[3])
         return sqrt_cords_str
-        # return [lamin, lomin, lamax, lomax]
-
 
 
 if __name__ == '__main__':
-    countries = CountyCords("https://nominatim.openstreetmap.org/search", "Sweden")
+    countries = CountyCords("https://nominatim.openstreetmap.org/search", "Canada")
     country_cords = countries.get_data()
     # countries_data = json.dumps(countries_a, indent=4, ensure_ascii=False)
 
-    # print(country_cords)
     params = {
-            "lamin": float(country_cords[0]),
-            "lamax": float(country_cords[1]),
-            "lomin": float(country_cords[2]),
-            "lomax": float(country_cords[3])
-            }
+        "lamin": float(country_cords[0]),
+        "lamax": float(country_cords[1]),
+        "lomin": float(country_cords[2]),
+        "lomax": float(country_cords[3])
+    }
     # params = {
     #         "lamin": 45.83,
     #         "lomin": 5.96,
@@ -72,8 +67,3 @@ if __name__ == '__main__':
     airplanes_data = airplanes.get_data()
     airplanes_result = json.dumps(airplanes_data, indent=4, ensure_ascii=False)
     print(airplanes_result)
-
-
-
-
-
