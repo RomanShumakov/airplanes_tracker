@@ -14,7 +14,7 @@ class AirplanesStorage(ABC):
         pass
 
     @abstractmethod
-    def delete_info(self, icao, callsign=None):
+    def delete_info(self, icao):
         pass
 
     @abstractmethod
@@ -53,7 +53,7 @@ class JsonAirplaneStorage(AirplanesStorage):
             return result
 
     def delete_info(self, icao):
-        """Удаление самолета по идентификатору ICAO или позывному callsign"""
+        """Удаление самолета по идентификатору ICAO"""
         with open(self.filename, "r", encoding="utf-8") as f:
             data = json.load(f)
 
@@ -97,5 +97,5 @@ if __name__ == "__main__":
     remaining = storage.get_data()
     print(f"Осталось после удаления: {len(remaining)} (должен быть 1)")
 
-    # 6. Финальная очистка (по желанию)
-    # storage.clear_all()
+    # 6. Финальная очистка
+    storage.clear_all()

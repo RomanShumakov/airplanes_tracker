@@ -46,7 +46,6 @@ class CountyCords(AbstractClass):
         return sqrt_cords_str
 
 
-# После сдачи курсовой не забыть реализовать логику на анализ данных с транспондера и аварийные случаи
 class AirplanesAnalyzer:
     """Класс для сравнения самолетов по скорости и высоте"""
 
@@ -59,13 +58,13 @@ class AirplanesAnalyzer:
         self.altitude = altitude
 
     @classmethod
-    def from_opensky_vector(cls, state, registration=None):
+    def from_opensky_vector(cls, state):
         """Создает объект AirplanesAnalyzer напрямую из списка состояния OpenSky"""
 
         return cls(
             icao=state[0],
             callsign=state[1],
-            registration=registration,
+            registration=state[2],
             time=state[4],
             velocity=state[9],
             altitude=state[7]
