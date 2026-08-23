@@ -47,3 +47,17 @@ class JsonAirplaneStorage(AirplanesStorage):
                     if data[k] == v:
                         result.append(f"{data[k]}: {v}")
                 return result
+
+        def delete_info(icao, callsign=None):
+            """Удаление самолета по идентификатору ICAO или позывному callsign"""
+            with open(self.filename, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            result = []
+
+            for airpalne in data:
+                if airpalne.get("states")[0] != icao or airpalne.get("states")[1] != callsign:
+                    result.append(airpalne)
+
+            with open(self.filename, "w", encoding="utf-8") as f:
+                json.dump(result, f, indent=4, ensure_ascii=False)
+
