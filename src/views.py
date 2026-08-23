@@ -46,6 +46,34 @@ class CountyCords(AbstractClass):
         return sqrt_cords_str
 
 
+# После сдачи курсовой не забыть реализовать логику на анализ данных с транспондера и аварийные случаи
+class AirplanesAnalyzer:
+    """Класс для сравнения самолетов по скорости и высоте"""
+
+    def __init__(self, icao, callsign, registration, time, velocity, altitude):
+        self.icao = icao
+        self.callsign = callsign
+        self.registration = registration
+        self.time = time
+        self.velocity = velocity
+        self.altitude = altitude
+
+    def validation(self):
+        self.callsign = self.callsign if self.callsign else f"{self.icao}_{self.registration}"
+
+    def __le__(self, other):
+        return (self.velocity <= other.velocity) and (self.altitude <= other.altitude)
+
+    def __lt__(self, other):
+        return (self.velocity < other.velocity) and (self.altitude < other.altitude)
+
+    def __gt__(self, other):
+        return (self.velocity > other.velocity) and (self.altitude > other.altitude)
+
+    def __ge__(self, other):
+        return (self.velocity >= other.velocity) and (self.altitude >= other.altitude)
+
+
 if __name__ == '__main__':
     countries = CountyCords("https://nominatim.openstreetmap.org/search", "Canada")
     country_cords = countries.get_data()
