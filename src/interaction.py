@@ -63,5 +63,3 @@ def user_interaction():
 
         elif choice == "0":
             break
-
-user_interaction()
