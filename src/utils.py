@@ -76,8 +76,8 @@ if __name__ == "__main__":
     storage.clear_all()
 
     # 2. Добавим пару самолетов (имитируем объекты через словари)
-    plane1 = {"icao": "a8069d", "callsign": "CGCWD", "country": "Canada"}
-    plane2 = {"icao": "a53edd", "callsign": "GPD437", "country": "USA"}
+    plane1 = {"icao": "a8069d", "callsign": "CGCWD", "registration": "Canada"}
+    plane2 = {"icao": "a53edd", "callsign": "GPD437", "registration": "USA"}
 
     storage.add_info(plane1)
     storage.add_info(plane2)
