@@ -70,28 +70,32 @@ class JsonAirplaneStorage(AirplanesStorage):
             json.dump([], f)
 
 if __name__ == "__main__":
-    if __name__ == "__main__":
-        storage = JsonAirplaneStorage("test_airplanes.json")
+    storage = JsonAirplaneStorage("test_airplanes.json")
 
-        test_plane = {
-            "icao24": "a8069d",
-            "callsign": "CGCWD ",
-            "origin_country": "Canada",
-            "velocity": 210.5
-        }
+    # 1. Очистим файл перед тестом
+    storage.clear_all()
 
-        print("Сохраняем тестовый самолет...")
-        storage.add_info(test_plane)
+    # 2. Добавим пару самолетов (имитируем объекты через словари)
+    plane1 = {"icao": "a8069d", "callsign": "CGCWD", "country": "Canada"}
+    plane2 = {"icao": "a53edd", "callsign": "GPD437", "country": "USA"}
 
-        data = storage.get_data()
-        print(f"Данные из файла: {data}")
+    storage.add_info(plane1)
+    storage.add_info(plane2)
+    print("Данные добавлены.")
 
-        result = storage.get_data(criteria={"icao24": "a8069d"})
-        print(f"Результат поиска по ICAO: {result}")
+    # 3. Проверим get_data без критериев
+    all_planes = storage.get_data()
+    print(f"Всего в базе: {len(all_planes)} самолета(ов).")
 
-        print("Удаляем данные...")
-        storage.delete_info(icao="a8069d")
+    # 4. Проверим фильтрацию по критерию
+    search_criteria = {"callsign": "CGCWD"}
+    found = storage.get_data(search_criteria)
+    print(f"Найдено по позывному CGCWD: {found}")
 
-        final_data = storage.get_data()
-        print(f"Файл после удаления: {final_data}")
+    # 5. Проверим удаление
+    storage.delete_info("a8069d")
+    remaining = storage.get_data()
+    print(f"Осталось после удаления: {len(remaining)} (должен быть 1)")
 
+    # 6. Финальная очистка (по желанию)
+    # storage.clear_all()
