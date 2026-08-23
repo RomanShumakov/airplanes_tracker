@@ -16,6 +16,10 @@ class AirplanesStorage(ABC):
     def delete_info(self):
         pass
 
+    @abstractmethod
+    def clear_all(self):
+        pass
+
 
 class JsonAirplaneStorage(AirplanesStorage):
     """Класс для операций с самолетами в json-файле"""
@@ -61,3 +65,6 @@ class JsonAirplaneStorage(AirplanesStorage):
             with open(self.filename, "w", encoding="utf-8") as f:
                 json.dump(result, f, indent=4, ensure_ascii=False)
 
+        def clear_all():
+            with open(self.filename, "w", encoding="utf-8") as f:
+                json.dump([], f)
