@@ -11,17 +11,17 @@ class AbstractClass(ABC):
 
 
 class AirplanesCords(AbstractClass):
-    """Класс для получения данных о самолетах по прямоугольным координатам"""
+    """Класс для получения данных о всех самолетах, выполняющих полет в прямоугольных координатам"""
 
-    def __init__(self, opensky_url, params_nominatim):
+    def __init__(self, opensky_url, sqrt_cords):
         self.opensky_url = opensky_url
-        self.params_nominatim = params_nominatim
-        self.headers_nominatim = {
+        self.params_opensky = sqrt_cords
+        self.headers_opensky = {
             'User-Agent': 'test-app/1.0',
         }
 
     def get_data(self):
-        response = requests.get(url=self.opensky_url, params=self.params_nominatim, headers=self.headers_nominatim)
+        response = requests.get(url=self.opensky_url, params=self.params_opensky, headers=self.headers_opensky)
         return response.json()
 
 
