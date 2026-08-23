@@ -49,10 +49,7 @@ class JsonAirplaneStorage(AirplanesStorage):
         if not criteria:
             return data
         else:
-            result = []
-            for k, v in data.items():
-                if data[k] == v:
-                    result.append(f"{data[k]}: {v}")
+            result = [airplane for airplane in data if all(airplane.get(k) == v for k, v in criteria.items())]
             return result
 
     def delete_info(self, icao):
@@ -61,9 +58,9 @@ class JsonAirplaneStorage(AirplanesStorage):
             data = json.load(f)
 
         result = []
-        for airpalne in data:
-            if airpalne.get("icao") != icao:
-                result.append(airpalne)
+        for airplane in data:
+            if airplane.get("icao") != icao:
+                result.append(airplane)
 
         with open(self.filename, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=4, ensure_ascii=False)
