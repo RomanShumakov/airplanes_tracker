@@ -58,6 +58,19 @@ class AirplanesAnalyzer:
         self.velocity = velocity
         self.altitude = altitude
 
+    @classmethod
+    def from_opensky_vector(cls, state, registration=None):
+        """Создает объект AirplanesAnalyzer напрямую из списка состояния OpenSky"""
+
+        return cls(
+            icao=state[0],
+            callsign=state[1],
+            registration=registration,
+            time=state[4],
+            velocity=state[9],
+            altitude=state[7]
+        )
+
     def validation(self):
         self.callsign = self.callsign if self.callsign else f"{self.icao}_{self.registration}"
 
@@ -72,6 +85,9 @@ class AirplanesAnalyzer:
 
     def __ge__(self, other):
         return (self.velocity >= other.velocity) and (self.altitude >= other.altitude)
+
+    def __repr__(self):
+        return f"AirplanesAnalyzer(ICAO='{self.icao}', callsign='{self.callsign}', velocity={self.velocity})"
 
 
 if __name__ == '__main__':
@@ -94,4 +110,11 @@ if __name__ == '__main__':
     airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
     airplanes_data = airplanes.get_data()
     airplanes_result = json.dumps(airplanes_data, indent=4, ensure_ascii=False)
-    print(airplanes_result)
+
+    airplanes_list = []
+
+    for s in airplanes_data['states']:
+        # Просто передаем один список из states в наш метод-конструктор
+        new_plane = AirplanesAnalyzer.from_opensky_vector(s)
+        airplanes_list.append(new_plane)
+    print(airplanes_list)
