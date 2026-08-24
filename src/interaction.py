@@ -7,8 +7,9 @@ def user_interaction():
     while True:
         print("\n--- Система мониторинга самолетов ---")
         print("1. Запросить самолеты в стране (OpenSky)")
-        print("2. Топ N самолетов по высоте из базы")
-        print("3. Поиск самолетов по стране в базе")
+        print("2. Запросить самолеты в заданном квадрате (OpenSky)")
+        print("3. Топ N самолетов по высоте из базы")
+        print("4. Поиск самолетов по стране в базе")
         print("0. Выход")
 
         choice = input("Выбери действие: ")
@@ -20,8 +21,8 @@ def user_interaction():
             try:
                 cords = geo.get_data()
                 params = {
-                "lamin": float(cords[0]), "lamax": float(cords[1]),
-                "lomin": float(cords[2]), "lomax": float(cords[3]) }
+                    "lamin": float(cords[0]), "lamax": float(cords[1]),
+                    "lomin": float(cords[2]), "lomax": float(cords[3])}
 
                 api = AirplanesCords('https://opensky-network.org/api/states/all', params)
                 raw_data = api.get_data()
@@ -46,6 +47,39 @@ def user_interaction():
 
         elif choice == "2":
             try:
+                lamin = float(input("Введите южную координату квадрата (lamin) через точку: "))
+                lamax = float(input("Введите северную координату квадрата (lamax) через точку: "))
+                lomin = float(input("Введите западную координату квадрата (lomin) через точку: "))
+                lomax = float(input("Введите восточную координату квадрата (lomax) через точку: "))
+            except ValueError:
+                print(f"Введено нечисловое значение!")
+            else:
+
+                params = {
+                    "lamin": lamin,
+                    "lamax": lamax,
+                    "lomin": lomin,
+                    "lomax": lomax
+                }
+
+                api = AirplanesCords('https://opensky-network.org/api/states/all', params)
+                raw_data = api.get_data()
+                # print(raw_data)
+
+                if not raw_data.get('states'):
+                    print("В этой зоне сейчас нет самолетов.")
+                    continue
+
+                for airplane in raw_data['states']:
+                    plane_obj = AirplanesAnalyzer.from_opensky_vector(airplane)
+                    plane_obj.validation()
+                    plane_dict = plane_obj.__dict__
+                    storage.add_info(plane_dict)
+                print(f"Успешно загружено {len(raw_data['states'])} самолетов.")
+
+
+        elif choice == "3":
+            try:
                 n = int(input("Введите N для топа по высоте: "))
                 data = storage.get_data()
                 sorted_planes = sorted(data, key=lambda x: x.get('altitude') or 0, reverse=True)
@@ -55,7 +89,7 @@ def user_interaction():
             except ValueError:
                 print("Введите корректное число.")
 
-        elif choice == "3":
+        elif choice == "4":
             country = input("Введите страну для поиска в базе: ")
             results = storage.get_data({"origin_country": country})
             for p in results:
