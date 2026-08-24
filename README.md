@@ -17,19 +17,19 @@
 ## Установка и запуск
 
 1. Клонируйте репозиторий:
- ```bash
- git clone https://github.com/RomanShumakov/airplanes_tracker.git
- ```
+```bash
+git clone https://github.com/RomanShumakov/airplanes_tracker.git
+```
 
 2. Установите зависимости (рекомендуется использовать venv):
- ```bash
- pip install -r requirements.txt
- ```
+```bash
+poetry install
+```
 
 3. Запустите приложение:
- ```bash
- python main.py
- ```
+```bash
+python main.py
+```
 
 ## Тестирование
 Для запуска тестов и генерации отчета о покрытии выполните:
