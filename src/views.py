@@ -100,12 +100,7 @@ if __name__ == '__main__':
         "lomin": float(country_cords[2]),
         "lomax": float(country_cords[3])
     }
-    # params = {
-    #         "lamin": 45.83,
-    #         "lomin": 5.96,
-    #         "lamax": 47.81,
-    #         "lomax": 10.49
-    #         }
+
     airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
     airplanes_data = airplanes.get_data()
     airplanes_result = json.dumps(airplanes_data, indent=4, ensure_ascii=False)
@@ -113,7 +108,6 @@ if __name__ == '__main__':
     airplanes_list = []
 
     for s in airplanes_data['states']:
-        # Просто передаем один список из states в наш метод-конструктор
         new_plane = AirplanesAnalyzer.from_opensky_vector(s)
         airplanes_list.append(new_plane)
     print(airplanes_list)
