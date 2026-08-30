@@ -61,7 +61,7 @@ class DBProector:
             with conn.cursor() as cur:
                 for country in COUNTRIES:
                     cur.execute("INSERT INTO country (name) VALUES (%s)"
-                                "RETURNING id", (country, ))
+                                "RETURNING id", (country,))
                     country_id = cur.fetchone()[0]
                     # print(country_id)
                     sqrt = CountryCords("https://nominatim.openstreetmap.org/search", country)
@@ -78,9 +78,9 @@ class DBProector:
                     airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
                     airplanes_data = airplanes.get_data()
                     for airplane in airplanes_data.get("states"):
-                        print(airplane)
-
-
+                        cur.execute(
+                            "INSERT INTO airplanes (icao, callsign, registration, velocity, altitude, dislocation) VALUES (%s, %s, %s, %s, %s, %s)"
+                            , (airplane[0], airplane[1], airplane[2], airplane[9], airplane[7], country_id))
 
         conn.close()
 
@@ -90,4 +90,5 @@ if __name__ == '__main__':
     d.db_connection_test()
     d.db_creator()
     d.country_table_creator()
+    d.airplanes_table_creator()
     d.insert_tables()
