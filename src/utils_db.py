@@ -83,30 +83,35 @@ class DBProector:
                             , (airplane[0], airplane[1], airplane[2], airplane[9], airplane[7], country_id))
 
         conn.close()
-#
-# class DBManager:
-#     def __init__(self, db_name):
-#         self.__db_name = db_name
-#
-#     def execute_query(self, query):
-#         conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
-#         conn.autocommit = True
-#         with conn.cursor() as cur:
-#             cur.execute("CREATE TABLE country"
-#                         "("
-#                         "id serial PRIMARY KEY,"
-#                         "name varchar(100)"
-#                         ");")
-#         conn.close()
-#
-#
-#
+
+
+class DBManager:
+    def __init__(self, db_name):
+        self.__db_name = db_name
+
+    def execute_query(self, query):
+        conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(query)
+                result = cur.fetchall()
+        conn.close()
+        return result
+
+    def get_all_aeroplanes(self):
+        return self.execute_query("SELECT * FROM airplanes")
+
 
 
 if __name__ == '__main__':
-    d = DBProector("aero")
-    d.db_connection_test()
-    d.db_creator()
-    d.country_table_creator()
-    d.airplanes_table_creator()
-    d.insert_tables()
+
+    # d = DBProector("aero")
+    # d.db_connection_test()
+    # d.db_creator()
+    # d.country_table_creator()
+    # d.airplanes_table_creator()
+    # d.insert_tables()
+
+    manager = DBManager("aero")
+    print(manager.get_all_aeroplanes())
+
