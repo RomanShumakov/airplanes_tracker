@@ -25,7 +25,7 @@ class AirplanesCords(AbstractClass):
         return response.json()
 
 
-class CountyCords(AbstractClass):
+class CountryCords(AbstractClass):
     """Класс для получения прямоугольных координат страны по ее названию"""
 
     def __init__(self, openstreetmap_url, country):
@@ -63,7 +63,7 @@ class AirplanesAnalyzer:
 
         return cls(
             icao=state[0],
-            callsign=state[1],
+            callsign=state[1].strip(),
             registration=state[2],
             time=state[4],
             velocity=state[9],
@@ -90,7 +90,7 @@ class AirplanesAnalyzer:
 
 
 if __name__ == '__main__':
-    countries = CountyCords("https://nominatim.openstreetmap.org/search", "Canada")
+    countries = CountryCords("https://nominatim.openstreetmap.org/search", "Canada")
     country_cords = countries.get_data()
     # countries_data = json.dumps(countries_a, indent=4, ensure_ascii=False)
 

@@ -1,9 +1,9 @@
 import pytest
-from src.views import CountyCords, AirplanesCords, AirplanesAnalyzer
+from src.views import CountryCords, AirplanesCords, AirplanesAnalyzer
 
 def test_county_cords_returns_list():
     """Проверяем получения координат на маленькой стране, чтобы координаты были стабильными"""
-    country_service = CountyCords("https://nominatim.openstreetmap.org/search", "Monaco")
+    country_service = CountryCords("https://nominatim.openstreetmap.org/search", "Monaco")
     coords = country_service.get_data()
 
     assert isinstance(coords, list)

@@ -1,4 +1,4 @@
-from src.views import CountyCords, AirplanesCords, AirplanesAnalyzer
+from src.views import CountryCords, AirplanesCords, AirplanesAnalyzer
 from src.utils import JsonAirplaneStorage
 
 def user_interaction():
@@ -17,7 +17,7 @@ def user_interaction():
         if choice == "1":
             country_name = input("Введите название страны на английском: ")
 
-            geo = CountyCords("https://nominatim.openstreetmap.org/search", country_name)
+            geo = CountryCords("https://nominatim.openstreetmap.org/search", country_name)
             try:
                 cords = geo.get_data()
                 params = {
