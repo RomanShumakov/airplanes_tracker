@@ -25,8 +25,20 @@ class DBProector:
             # print(f"БД {self.db_name} успешно создана!")
         conn.close()
 
+    def country_table_creator(self):
+        conn = psycopg2.connect(dbname=self.db_name, **DB_CONFIG)
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute("CREATE TABLE country"
+                        "("
+                        "id serial PRIMARY KEY,"
+                        "country varchar(100)"
+                        ");")
+        conn.close()
+
 
 if __name__ == '__main__':
     d = DBProector("aero")
     # d.db_connection_test()
-    d.db_creator()
+    # d.db_creator()
+    d.country_table_creator()
