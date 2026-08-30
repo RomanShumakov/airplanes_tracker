@@ -80,7 +80,7 @@ class DBProector:
                     for airplane in airplanes_data.get("states"):
                         cur.execute(
                             "INSERT INTO airplanes (icao, callsign, registration, velocity, altitude, dislocation) VALUES (%s, %s, %s, %s, %s, %s)"
-                            , (airplane[0], airplane[1], airplane[2], airplane[9], airplane[7], country_id))
+                            , (airplane[0], airplane[1].strip(), airplane[2], airplane[9], airplane[7], country_id))
 
         conn.close()
 
@@ -117,14 +117,18 @@ class DBManager:
         return self.execute_query("""SELECT * FROM airplanes
                                      WHERE velocity > (SELECT AVG(velocity) FROM airplanes)""")
 
+    def get_aeroplanes_with_keyword(self, finder_str):
+        """получает список всех самолетов, в позывном которых содержатся переданные в метод символы"""
+        return self.execute_query(f"SELECT * FROM airplanes WHERE callsign LIKE '{finder_str}%'")
+
 
 if __name__ == '__main__':
-    # d = DBProector("aero")
-    # d.db_connection_test()
-    # d.db_creator()
-    # d.country_table_creator()
-    # d.airplanes_table_creator()
-    # d.insert_tables()
+    d = DBProector("aero")
+    d.db_connection_test()
+    d.db_creator()
+    d.country_table_creator()
+    d.airplanes_table_creator()
+    d.insert_tables()
 
     manager = DBManager("aero")
-    print(manager.get_countries_and_aeroplanes_count())
+    print(manager.get_aeroplanes_with_keyword("ACA"))
