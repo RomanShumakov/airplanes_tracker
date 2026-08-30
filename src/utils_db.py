@@ -1,4 +1,7 @@
+import json
+
 import psycopg2
+from src.views import AirplanesCords, CountryCords
 
 from config import DB_CONFIG, COUNTRIES
 
@@ -60,7 +63,23 @@ class DBProector:
                     cur.execute("INSERT INTO country (name) VALUES (%s)"
                                 "RETURNING id", (country, ))
                     country_id = cur.fetchone()[0]
-                    print(country_id)
+                    # print(country_id)
+                    sqrt = CountryCords("https://nominatim.openstreetmap.org/search", country)
+                    country_cords = sqrt.get_data()
+                    # countries_data = json.dumps(countries_a, indent=4, ensure_ascii=False)
+
+                    params = {
+                        "lamin": float(country_cords[0]),
+                        "lamax": float(country_cords[1]),
+                        "lomin": float(country_cords[2]),
+                        "lomax": float(country_cords[3])
+                    }
+
+                    airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
+                    airplanes_data = airplanes.get_data()
+                    for airplane in airplanes_data.get("states"):
+                        print(airplane)
+
 
 
         conn.close()
