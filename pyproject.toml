@@ -19,3 +19,8 @@ dependencies = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "types-psycopg2 (>=2.9.21.20260724,<3.0.0.0)"
+]
