@@ -1,4 +1,3 @@
-import json
 
 import psycopg2
 from src.views import AirplanesCords, CountryCords
@@ -7,11 +6,13 @@ from config import DB_CONFIG, COUNTRIES
 
 
 class DBProector:
+    """Класс для создания и наполнения БД с переданным именем"""
     def __init__(self, db_name):
         self.__db_name = db_name
 
     @staticmethod
     def db_connection_test():
+        """Метод для проверки правильности пользовательских данных из .env в config"""
         conn = psycopg2.connect(dbname="postgres", **DB_CONFIG)
         conn.autocommit = True
         with conn.cursor() as cur:
@@ -21,6 +22,7 @@ class DBProector:
         conn.close()
 
     def db_creator(self):
+        """Метод создания БД с указанным именем"""
         conn = psycopg2.connect(dbname="postgres", **DB_CONFIG)
         conn.autocommit = True
         with conn.cursor() as cur:
@@ -30,6 +32,7 @@ class DBProector:
         conn.close()
 
     def country_table_creator(self):
+        """Метод создания таблицы country"""
         conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
         conn.autocommit = True
         with conn.cursor() as cur:
@@ -41,6 +44,7 @@ class DBProector:
         conn.close()
 
     def airplanes_table_creator(self):
+        """Метод создания таблицы airplanes"""
         conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
         conn.autocommit = True
         with conn.cursor() as cur:
@@ -56,6 +60,7 @@ class DBProector:
         conn.close()
 
     def insert_tables(self):
+        """Метод заполнения созданных таблиц данными из opensky-network по каждой стране из config"""
         conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
         with conn:
             with conn.cursor() as cur:
@@ -86,6 +91,7 @@ class DBProector:
 
 
 class DBManager:
+    """Класс для работы с существующей БД"""
     def __init__(self, db_name):
         self.__db_name = db_name
 
