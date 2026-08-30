@@ -98,13 +98,18 @@ class DBManager:
         conn.close()
         return result
 
+    def get_countries_and_aeroplanes_count(self):
+        """получает список всех стран и количество самолетов в их воздушных пространствах"""
+        return self.execute_query("""SELECT COUNT(*), country.name FROM airplanes 
+                                     JOIN country ON airplanes.dislocation=country.id
+                                     GROUP BY country.name""")
+
     def get_all_aeroplanes(self):
+        """получает список всех воздушных судов."""
         return self.execute_query("SELECT * FROM airplanes")
 
 
-
 if __name__ == '__main__':
-
     # d = DBProector("aero")
     # d.db_connection_test()
     # d.db_creator()
@@ -113,5 +118,4 @@ if __name__ == '__main__':
     # d.insert_tables()
 
     manager = DBManager("aero")
-    print(manager.get_all_aeroplanes())
-
+    print(manager.get_countries_and_aeroplanes_count())
