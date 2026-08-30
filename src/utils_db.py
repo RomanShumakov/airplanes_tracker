@@ -2,6 +2,7 @@ import psycopg2
 
 from config import DB_CONFIG
 
+
 class DBProector:
     def __init__(self, db_name):
         self.db_name = db_name
@@ -36,9 +37,25 @@ class DBProector:
                         ");")
         conn.close()
 
+    def airplanes_table_creator(self):
+        conn = psycopg2.connect(dbname=self.db_name, **DB_CONFIG)
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute("CREATE TABLE airplanes"
+                        "("
+                        "icao varchar(10) PRIMARY KEY,"
+                        "callsign varchar(50),"
+                        "registration varchar(100),"
+                        "velocity float,"
+                        "altitude float,"
+                        "dislocation int REFERENCES country(id)"
+                        ");")
+        conn.close()
+
 
 if __name__ == '__main__':
     d = DBProector("aero")
     # d.db_connection_test()
     # d.db_creator()
-    d.country_table_creator()
+    # d.country_table_creator()
+    d.airplanes_table_creator()
