@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 import requests
 import json
 
+from config import COUNTRIES
+
 
 class AbstractClass(ABC):
 
@@ -90,24 +92,28 @@ class AirplanesAnalyzer:
 
 
 if __name__ == '__main__':
-    countries = CountryCords("https://nominatim.openstreetmap.org/search", "Canada")
-    country_cords = countries.get_data()
-    # countries_data = json.dumps(countries_a, indent=4, ensure_ascii=False)
 
-    params = {
-        "lamin": float(country_cords[0]),
-        "lamax": float(country_cords[1]),
-        "lomin": float(country_cords[2]),
-        "lomax": float(country_cords[3])
-    }
+    for country in COUNTRIES:
+        countries = CountryCords("https://nominatim.openstreetmap.org/search", country)
+        country_cords = countries.get_data()
+        # countries_data = json.dumps(countries_a, indent=4, ensure_ascii=False)
+        print("______________________________________________________")
+        print(country)
 
-    airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
-    airplanes_data = airplanes.get_data()
-    airplanes_result = json.dumps(airplanes_data, indent=4, ensure_ascii=False)
+        params = {
+            "lamin": float(country_cords[0]),
+            "lamax": float(country_cords[1]),
+            "lomin": float(country_cords[2]),
+            "lomax": float(country_cords[3])
+        }
 
-    airplanes_list = []
+        airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
+        airplanes_data = airplanes.get_data()
+        airplanes_result = json.dumps(airplanes_data, indent=4, ensure_ascii=False)
 
-    for s in airplanes_data['states']:
-        new_plane = AirplanesAnalyzer.from_opensky_vector(s)
-        airplanes_list.append(new_plane)
-    print(airplanes_list)
+        airplanes_list = []
+
+        for s in airplanes_data['states']:
+            new_plane = AirplanesAnalyzer.from_opensky_vector(s)
+            airplanes_list.append(new_plane)
+        print(airplanes_list)
