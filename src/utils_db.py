@@ -108,6 +108,10 @@ class DBManager:
         """получает список всех воздушных судов."""
         return self.execute_query("SELECT * FROM airplanes")
 
+    def get_avg_speed(self):
+        """получает среднюю скорость по самолетам"""
+        return self.execute_query("SELECT AVG(velocity) FROM airplanes")
+
 
 if __name__ == '__main__':
     # d = DBProector("aero")
@@ -118,4 +122,4 @@ if __name__ == '__main__':
     # d.insert_tables()
 
     manager = DBManager("aero")
-    print(manager.get_countries_and_aeroplanes_count())
+    print(manager.get_avg_speed())
