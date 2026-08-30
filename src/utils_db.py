@@ -1,6 +1,6 @@
 import psycopg2
 
-from config import DB_CONFIG
+from config import DB_CONFIG, COUNTRIES
 
 
 class DBProector:
@@ -33,7 +33,7 @@ class DBProector:
             cur.execute("CREATE TABLE country"
                         "("
                         "id serial PRIMARY KEY,"
-                        "country varchar(100)"
+                        "name varchar(100)"
                         ");")
         conn.close()
 
@@ -52,10 +52,23 @@ class DBProector:
                         ");")
         conn.close()
 
+    def insert_tables(self):
+        conn = psycopg2.connect(dbname=self.db_name, **DB_CONFIG)
+        with conn:
+            with conn.cursor() as cur:
+                for country in COUNTRIES:
+                    cur.execute("INSERT INTO country (name) VALUES (%s)"
+                                "RETURNING id", (country, ))
+                    country_id = cur.fetchone()[0]
+                    print(country_id)
+
+
+        conn.close()
+
 
 if __name__ == '__main__':
     d = DBProector("aero")
-    # d.db_connection_test()
-    # d.db_creator()
-    # d.country_table_creator()
-    d.airplanes_table_creator()
+    d.db_connection_test()
+    d.db_creator()
+    d.country_table_creator()
+    d.insert_tables()
