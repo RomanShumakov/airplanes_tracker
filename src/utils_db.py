@@ -102,7 +102,7 @@ class DBManager:
         """получает список всех стран и количество самолетов в их воздушных пространствах"""
         return self.execute_query("""SELECT COUNT(*), country.name FROM airplanes 
                                      JOIN country ON airplanes.dislocation=country.id
-                                     GROUP BY country.name""")
+                                     GROUP BY country.id, country.name""")
 
     def get_all_aeroplanes(self):
         """получает список всех воздушных судов."""
@@ -111,6 +111,11 @@ class DBManager:
     def get_avg_speed(self):
         """получает среднюю скорость по самолетам"""
         return self.execute_query("SELECT AVG(velocity) FROM airplanes")
+
+    def get_aeroplanes_with_higher_speed(self):
+        """получает список всех самолетов, у которых скорость выше средней"""
+        return self.execute_query("""SELECT * FROM airplanes
+                                     WHERE velocity > (SELECT AVG(velocity) FROM airplanes)""")
 
 
 if __name__ == '__main__':
@@ -122,4 +127,4 @@ if __name__ == '__main__':
     # d.insert_tables()
 
     manager = DBManager("aero")
-    print(manager.get_avg_speed())
+    print(manager.get_countries_and_aeroplanes_count())
