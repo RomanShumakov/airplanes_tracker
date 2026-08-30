@@ -8,7 +8,7 @@ from config import DB_CONFIG, COUNTRIES
 
 class DBProector:
     def __init__(self, db_name):
-        self.db_name = db_name
+        self.__db_name = db_name
 
     @staticmethod
     def db_connection_test():
@@ -24,13 +24,13 @@ class DBProector:
         conn = psycopg2.connect(dbname="postgres", **DB_CONFIG)
         conn.autocommit = True
         with conn.cursor() as cur:
-            cur.execute(f"DROP DATABASE IF EXISTS {self.db_name};")
-            cur.execute(f"CREATE DATABASE {self.db_name};")
+            cur.execute(f"DROP DATABASE IF EXISTS {self.__db_name};")
+            cur.execute(f"CREATE DATABASE {self.__db_name};")
             # print(f"БД {self.db_name} успешно создана!")
         conn.close()
 
     def country_table_creator(self):
-        conn = psycopg2.connect(dbname=self.db_name, **DB_CONFIG)
+        conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
         conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute("CREATE TABLE country"
@@ -41,7 +41,7 @@ class DBProector:
         conn.close()
 
     def airplanes_table_creator(self):
-        conn = psycopg2.connect(dbname=self.db_name, **DB_CONFIG)
+        conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
         conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute("CREATE TABLE airplanes"
@@ -56,7 +56,7 @@ class DBProector:
         conn.close()
 
     def insert_tables(self):
-        conn = psycopg2.connect(dbname=self.db_name, **DB_CONFIG)
+        conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
         with conn:
             with conn.cursor() as cur:
                 for country in COUNTRIES:
@@ -83,6 +83,24 @@ class DBProector:
                             , (airplane[0], airplane[1], airplane[2], airplane[9], airplane[7], country_id))
 
         conn.close()
+#
+# class DBManager:
+#     def __init__(self, db_name):
+#         self.__db_name = db_name
+#
+#     def execute_query(self, query):
+#         conn = psycopg2.connect(dbname=self.__db_name, **DB_CONFIG)
+#         conn.autocommit = True
+#         with conn.cursor() as cur:
+#             cur.execute("CREATE TABLE country"
+#                         "("
+#                         "id serial PRIMARY KEY,"
+#                         "name varchar(100)"
+#                         ");")
+#         conn.close()
+#
+#
+#
 
 
 if __name__ == '__main__':
