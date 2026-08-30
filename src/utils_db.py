@@ -15,18 +15,18 @@ class DBProector:
             db_version = cur.fetchone()
             print(f"Успешное подключение! Версия БД: {db_version}")
         conn.close()
-    #
-    # def db_creator(self, db_name):
-    #     conn = psycopg2.connect(dbname=db_name, **DB_CONFIG)
-    #     conn.autocommit = True
-    #     with conn.cursor() as cur:
-    #         cur.execute(f"DROP DATABASE {db_name} IF EXISTS;")
-    #         cur.execute(f"CREATE DATABASE {db_name};")
-    #         db_version = cur.fetchone()
-    #         print(f"БД {db_version} успешно создана!")
-    #     conn.close()
+
+    def db_creator(self):
+        conn = psycopg2.connect(dbname="postgres", **DB_CONFIG)
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute(f"DROP DATABASE IF EXISTS {self.db_name};")
+            cur.execute(f"CREATE DATABASE {self.db_name};")
+            # print(f"БД {self.db_name} успешно создана!")
+        conn.close()
 
 
 if __name__ == '__main__':
-    d = DBProector
-    d.db_connection_test()
+    d = DBProector("aero")
+    # d.db_connection_test()
+    d.db_creator()
