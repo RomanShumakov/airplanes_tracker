@@ -1,13 +1,14 @@
 from src.utils_db import DBProector, DBManager
 import io
 from contextlib import redirect_stdout
-import os
 
 
 def database_interaction():
+    """Функция для работы c БД через пользовательский интерфейс"""
     db_name = input("Введите желаемое имя базы данных: ").strip()
     db_obj = DBProector(db_name)
 
+    # Проверка правильности ввода учетных данных (опционально)
     f = io.StringIO()
     try:
         with redirect_stdout(f):
@@ -15,7 +16,7 @@ def database_interaction():
         output = f.getvalue()
         print(output.strip())
     except Exception:
-        raise ConnectionError("Введены неверные учетные данные. Доступ заблокирован.") from None
+        raise ConnectionError("Введены неверные учетные данные. Доступ заблокирован. Проверьте файл '.env'.") from None
 
     db_obj.db_creator()
     db_obj.country_table_creator()
