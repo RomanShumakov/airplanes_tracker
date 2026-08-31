@@ -23,6 +23,7 @@ class AirplanesCords(AbstractClass):
         }
 
     def get_data(self):
+        """Метод получения данных с сайта"""
         response = requests.get(url=self.opensky_url, params=self.params_opensky, headers=self.headers_opensky)
         return response.json()
 
@@ -42,6 +43,7 @@ class CountryCords(AbstractClass):
         }
 
     def get_data(self):
+        """Метод получения данных с сайта"""
         response = requests.get(url=self.openstreetmap_url, params=self.params_nominatim,
                                 headers=self.headers_nominatim)
         sqrt_cords_str = response.json()[0].get("boundingbox")
