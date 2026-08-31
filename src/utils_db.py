@@ -125,7 +125,7 @@ class DBManager:
 
     def get_aeroplanes_with_keyword(self, finder_str):
         """получает список всех самолетов, в позывном которых содержатся переданные в метод символы"""
-        return self.execute_query(f"SELECT * FROM airplanes WHERE callsign LIKE '{finder_str}%'")
+        return self.execute_query(f"SELECT * FROM airplanes WHERE callsign LIKE '%{finder_str}%'")
 
 
 if __name__ == '__main__':
