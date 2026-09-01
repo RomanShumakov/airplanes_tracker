@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 import requests
 import json
 
+from config import COUNTRIES
+
 
 class AbstractClass(ABC):
 
@@ -21,11 +23,12 @@ class AirplanesCords(AbstractClass):
         }
 
     def get_data(self):
+        """Метод получения данных с сайта"""
         response = requests.get(url=self.opensky_url, params=self.params_opensky, headers=self.headers_opensky)
         return response.json()
 
 
-class CountyCords(AbstractClass):
+class CountryCords(AbstractClass):
     """Класс для получения прямоугольных координат страны по ее названию"""
 
     def __init__(self, openstreetmap_url, country):
@@ -40,6 +43,7 @@ class CountyCords(AbstractClass):
         }
 
     def get_data(self):
+        """Метод получения данных с сайта"""
         response = requests.get(url=self.openstreetmap_url, params=self.params_nominatim,
                                 headers=self.headers_nominatim)
         sqrt_cords_str = response.json()[0].get("boundingbox")
@@ -63,7 +67,7 @@ class AirplanesAnalyzer:
 
         return cls(
             icao=state[0],
-            callsign=state[1],
+            callsign=state[1].strip(),
             registration=state[2],
             time=state[4],
             velocity=state[9],
@@ -90,24 +94,28 @@ class AirplanesAnalyzer:
 
 
 if __name__ == '__main__':
-    countries = CountyCords("https://nominatim.openstreetmap.org/search", "Canada")
-    country_cords = countries.get_data()
-    # countries_data = json.dumps(countries_a, indent=4, ensure_ascii=False)
 
-    params = {
-        "lamin": float(country_cords[0]),
-        "lamax": float(country_cords[1]),
-        "lomin": float(country_cords[2]),
-        "lomax": float(country_cords[3])
-    }
+    for country in COUNTRIES:
+        countries = CountryCords("https://nominatim.openstreetmap.org/search", country)
+        country_cords = countries.get_data()
+        # countries_data = json.dumps(countries_a, indent=4, ensure_ascii=False)
+        print("______________________________________________________")
+        print(country)
 
-    airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
-    airplanes_data = airplanes.get_data()
-    airplanes_result = json.dumps(airplanes_data, indent=4, ensure_ascii=False)
+        params = {
+            "lamin": float(country_cords[0]),
+            "lamax": float(country_cords[1]),
+            "lomin": float(country_cords[2]),
+            "lomax": float(country_cords[3])
+        }
 
-    airplanes_list = []
+        airplanes = AirplanesCords('https://opensky-network.org/api/states/all', params)
+        airplanes_data = airplanes.get_data()
+        airplanes_result = json.dumps(airplanes_data, indent=4, ensure_ascii=False)
 
-    for s in airplanes_data['states']:
-        new_plane = AirplanesAnalyzer.from_opensky_vector(s)
-        airplanes_list.append(new_plane)
-    print(airplanes_list)
+        airplanes_list = []
+
+        for s in airplanes_data['states']:
+            new_plane = AirplanesAnalyzer.from_opensky_vector(s)
+            airplanes_list.append(new_plane)
+        print(airplanes_list)
